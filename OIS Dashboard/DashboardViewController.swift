@@ -6,9 +6,18 @@
 //
 
 import UIKit
+import Foundation
 
 class DashboardViewController: UIViewController {
 
+    var roomNumber = "325" // TODO: Change to a real value from the settings
+    {
+        didSet{
+            // TODO: Update the UI
+            // What else do we have to update?
+        }
+    }
+    
     var dayType: DayType = .None
     {
         didSet{
@@ -24,11 +33,30 @@ class DashboardViewController: UIViewController {
         }
     }
     
+    func updateUI() {
+        // TODO: Implement
+        // How often should we call this function?
+        // What labels should we set?
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Date formatting sample code
+        // Calling Date() returns the current time
+        let currentDateAndTime = Date()
+        // A date formatter turns Date objects or Strings into formatted strings
+        let formatter = DateFormatter()
+        // The 'dateFormat' represents how you want to present the Date in the new string
+        // Use https://nsdateformatter.com/ to find what to put here
+        formatter.dateFormat = "MM/dd/yyyy"
+        // Use the formatter and the dateFormat from above to make a new formatted String
+        let dateString = formatter.string(from: currentDateAndTime)
+        print(dateString)
+
+        
         getDayTypeForToday()
-        let roomNumber = "325" // TODO: Change to a real value from the settings
+        
         getClassBlocksForToday(roomNumber: roomNumber)
     }
 
@@ -71,6 +99,17 @@ class DashboardViewController: UIViewController {
     /* Uses a network call to the server to retrieve all classes that are taught in this room on the current day */
     func getClassBlocksForToday(roomNumber: String) {
         // TODO: Implement
+        let urlPath = "/getBellScheduleForRoom"
+        // Call the server to get the json data
+        
+        //let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [ [String:AnyObject] ]
+
+        // Once you have the JSON data
+        // For EACH dictionaries in the array
+        
+        //json![0]["startTime"]! as! String
+            // Create a new ClassBlock and add it our classBlocks array
+        //classBlocks.append(ClassBlock(className: <#T##String#>, teacherName: <#T##String#>, startTime: <#T##NSDate#>, endTime: <#T##NSDate#>, blockName: <#T##String#>))
         
     }
     
@@ -78,14 +117,14 @@ class DashboardViewController: UIViewController {
     func getCurrentClass(roomNumber: String) -> ClassBlock {
         // TODO: Implement
         // Hint, you have a function that can give you an array of all of today's classes...
-        return ClassBlock(className: "test", teacherName: "test", startTime: NSDate(), endTime: NSDate(), blockName: "test")
+        return ClassBlock(className: "Test-AP CS", teacherName: "Test-Mr. Anderson", startTime: Date(), endTime: Date(), blockName: "Test-B4(O)")
     }
     
     /* Calculates and returns the time left before the bell rings for the current class */
-    func timeLeftInClass() -> NSDate {
+    func timeLeftInClass() -> Date {
         // TODO: Implement
         // Hint, you have a function that can give you the current class...
-        return NSDate()
+        return Date()
     }
 }
 

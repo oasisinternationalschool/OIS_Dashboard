@@ -10,11 +10,11 @@ import Foundation
 class ClassBlock {
     var className: String
     var teacherName: String
-    var startTime: NSDate
-    var endTime: NSDate
+    var startTime: Date
+    var endTime: Date
     var blockName: String
     
-    init(className: String, teacherName: String, startTime: NSDate, endTime: NSDate, blockName: String) {
+    init(className: String, teacherName: String, startTime: Date, endTime: Date, blockName: String) {
         self.className = className
         self.teacherName = teacherName
         self.startTime = startTime
