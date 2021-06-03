@@ -55,7 +55,7 @@ class DashboardViewController: UIViewController {
         print(dateString)
 
         
-        getDayTypeForToday()
+        //getDayTypeForToday()
         
         getClassBlocksForToday(roomNumber: roomNumber)
     }
@@ -100,16 +100,43 @@ class DashboardViewController: UIViewController {
     func getClassBlocksForToday(roomNumber: String) {
         // TODO: Implement
         let urlPath = "/getBellScheduleForRoom"
-        // Call the server to get the json data
+        let url = URL(string: "\(SERVER_URL)\(urlPath)")!
+        let request = URLRequest(url: url)
+        let session = URLSession.shared
         
-        //let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [ [String:AnyObject] ]
-
-        // Once you have the JSON data
-        // For EACH dictionaries in the array
-        
-        //json![0]["startTime"]! as! String
-            // Create a new ClassBlock and add it our classBlocks array
-        //classBlocks.append(ClassBlock(className: <#T##String#>, teacherName: <#T##String#>, startTime: <#T##NSDate#>, endTime: <#T##NSDate#>, blockName: <#T##String#>))
+        let task = session.dataTask(with: request) { (data, response, error) in
+            // Everything in this code block is called asynchronously at a 'later' time
+            print("Started network call for the class schedule")
+            if let error = error {
+                print(error)
+            } else if let data = data {
+                do {
+                    // Convert the string data into a JSON Object and then convert that JSON object into a Swift Dictionary
+                    let classArray = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! [ [String:AnyObject] ]
+                    for classDict in classArray {
+                        print(classDict)
+                        
+                        
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+                        let startDate = dateFormatter.date(from: classDict["startTime"]! as! String)!
+                        
+                        
+                        // Do the same thing for the end date
+                        
+                        
+                        // Fill in this line
+                        //classBlocks.append(ClassBlock(className: classDict["className"]!, teacherName: classDict["teacherName"]!, startTime: , endTime: , blockName: classDict["blockName"]!))
+                    }
+                  
+                } catch {
+                   print("Something went wrong with the data.")
+                }
+            } else {
+                print("The server responded, but did not send any data.")
+            }
+        }
+        task.resume()
         
     }
     
@@ -117,6 +144,9 @@ class DashboardViewController: UIViewController {
     func getCurrentClass(roomNumber: String) -> ClassBlock {
         // TODO: Implement
         // Hint, you have a function that can give you an array of all of today's classes...
+        
+        // Search through all the classes
+        // Return the one that is now
         return ClassBlock(className: "Test-AP CS", teacherName: "Test-Mr. Anderson", startTime: Date(), endTime: Date(), blockName: "Test-B4(O)")
     }
     
