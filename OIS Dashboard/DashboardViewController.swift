@@ -14,7 +14,7 @@ class DashboardViewController: UIViewController {
     {
         didSet{
             // TODO: Update the UI
-            // What else do we have to update?
+            // What else do we have to update? Or reset?
         }
     }
     
@@ -29,7 +29,14 @@ class DashboardViewController: UIViewController {
     var classBlocks: [ClassBlock] = []
     {
         didSet{
+            print("There are  \(classBlocks.count) classes today.")
             // TODO: Update the UI
+            if let curClass = getCurrentClass() {
+                print(curClass)
+            }
+            else {
+                print("No classes currently in session.")
+            }
         }
     }
     
@@ -54,9 +61,7 @@ class DashboardViewController: UIViewController {
         let dateString = formatter.string(from: currentDateAndTime)
         print(dateString)
 
-        
-        //getDayTypeForToday()
-        
+        getDayTypeForToday()
         getClassBlocksForToday(roomNumber: roomNumber)
     }
 
@@ -98,13 +103,12 @@ class DashboardViewController: UIViewController {
 
     /* Uses a network call to the server to retrieve all classes that are taught in this room on the current day */
     func getClassBlocksForToday(roomNumber: String) {
-        // TODO: Implement
         let urlPath = "/getBellScheduleForRoom"
         let url = URL(string: "\(SERVER_URL)\(urlPath)")!
         let request = URLRequest(url: url)
         let session = URLSession.shared
         
-        let task = session.dataTask(with: request) { (data, response, error) in
+        let task = session.dataTask(with: request) { [self] (data, response, error) in
             // Everything in this code block is called asynchronously at a 'later' time
             print("Started network call for the class schedule")
             if let error = error {
@@ -114,21 +118,16 @@ class DashboardViewController: UIViewController {
                     // Convert the string data into a JSON Object and then convert that JSON object into a Swift Dictionary
                     let classArray = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! [ [String:AnyObject] ]
                     for classDict in classArray {
-                        print(classDict)
-                        
-                        
+                        // Setup the dateformatter to read the server data
                         let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                         let startDate = dateFormatter.date(from: classDict["startTime"]! as! String)!
                         
+                        let endDate = dateFormatter.date(from: classDict["endTime"]! as! String)!
                         
-                        // Do the same thing for the end date
-                        
-                        
-                        // Fill in this line
-                        //classBlocks.append(ClassBlock(className: classDict["className"]!, teacherName: classDict["teacherName"]!, startTime: , endTime: , blockName: classDict["blockName"]!))
+                        // Create a new class based on the server data
+                        self.classBlocks.append(ClassBlock(className: classDict["className"]! as! String, teacherName: classDict["teacherName"]! as! String, startTime: startDate, endTime: endDate, blockName: classDict["blockName"]! as! String))
                     }
-                  
                 } catch {
                    print("Something went wrong with the data.")
                 }
@@ -141,20 +140,25 @@ class DashboardViewController: UIViewController {
     }
     
     /* Returns the class that is currently in this room*/
-    func getCurrentClass(roomNumber: String) -> ClassBlock {
-        // TODO: Implement
-        // Hint, you have a function that can give you an array of all of today's classes...
-        
+    func getCurrentClass() -> ClassBlock? {
         // Search through all the classes
-        // Return the one that is now
-        return ClassBlock(className: "Test-AP CS", teacherName: "Test-Mr. Anderson", startTime: Date(), endTime: Date(), blockName: "Test-B4(O)")
+        for classBlock in classBlocks {
+            // Return the one that is now
+            print("Start time: \(classBlock.startTime)")
+            print("Now: \(Date())")
+            print("End time: \(classBlock.endTime)")
+            if Date() >= classBlock.startTime && Date() <= classBlock.endTime {
+                return classBlock
+            }
+        }
+        return nil
     }
     
     /* Calculates and returns the time left before the bell rings for the current class */
-    func timeLeftInClass() -> Date {
+    func timeLeftInClass() -> TimeInterval {
         // TODO: Implement
         // Hint, you have a function that can give you the current class...
-        return Date()
+        return TimeInterval()
     }
 }
 
