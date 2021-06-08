@@ -10,6 +10,15 @@ import Foundation
 
 class DashboardViewController: UIViewController {
 
+    @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var time: UILabel!
+    @IBOutlet weak var classStartButton: UIButton!
+    @IBOutlet weak var ODay: UILabel!
+    
+    @IBOutlet weak var ADay: UILabel!
+    @IBOutlet weak var teacherName: UILabel!
+    @IBOutlet weak var classroonNumber: UILabel!
+    
     var roomNumber = "325" // TODO: Change to a real value from the settings
     {
         didSet{
@@ -32,7 +41,7 @@ class DashboardViewController: UIViewController {
             print("There are  \(classBlocks.count) classes today.")
             // TODO: Update the UI
             if let curClass = getCurrentClass() {
-                print(curClass)
+                print("The current class is: \(curClass.className)")
             }
             else {
                 print("No classes currently in session.")
@@ -41,28 +50,37 @@ class DashboardViewController: UIViewController {
     }
     
     func updateUI() {
-        // TODO: Implement
         // How often should we call this function?
         // What labels should we set?
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
-        // Date formatting sample code
+        // SET DATE AND TIME DISPLAY
         // Calling Date() returns the current time
         let currentDateAndTime = Date()
         // A date formatter turns Date objects or Strings into formatted strings
         let formatter = DateFormatter()
         // The 'dateFormat' represents how you want to present the Date in the new string
         // Use https://nsdateformatter.com/ to find what to put here
-        formatter.dateFormat = "MM/dd/yyyy"
+        formatter.dateFormat = "MMM/dd/yyyy"
+
         // Use the formatter and the dateFormat from above to make a new formatted String
         let dateString = formatter.string(from: currentDateAndTime)
         print(dateString)
+        date.text = dateString
+        
+        //print out time 62 64 66 for time
+        formatter.dateFormat = "hh: mm : ss a"
+        let timeString = formatter.string(from: currentDateAndTime)
+        print(timeString)
+        time.text = timeString
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
         getDayTypeForToday()
         getClassBlocksForToday(roomNumber: roomNumber)
+        
+        updateUI()
     }
 
     /* Uses a network call to the server to retrieve the day type of the current day */
