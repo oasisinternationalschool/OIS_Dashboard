@@ -13,16 +13,15 @@ class DashboardViewController: UIViewController {
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var classStartButton: UIButton!
-    @IBOutlet weak var ODay: UILabel!
+
     
-    @IBOutlet weak var ADay: UILabel!
+    @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var teacherName: UILabel!
     @IBOutlet weak var classroonNumber: UILabel!
     
     var roomNumber = "325" // TODO: Change to a real value from the settings
     {
         didSet{
-            // TODO: Update the UI
             // What else do we have to update? Or reset?
         }
     }
@@ -31,7 +30,6 @@ class DashboardViewController: UIViewController {
     {
         didSet{
             print("The day type is \(dayType)")
-            // TODO: Update the UI
         }
     }
     
@@ -39,7 +37,6 @@ class DashboardViewController: UIViewController {
     {
         didSet{
             print("There are  \(classBlocks.count) classes today.")
-            // TODO: Update the UI
             if let curClass = getCurrentClass() {
                 print("The current class is: \(curClass.className)")
             }
@@ -49,7 +46,7 @@ class DashboardViewController: UIViewController {
         }
     }
     
-    func updateUI() {
+    @objc func updateUI() {
         // How often should we call this function?
         // What labels should we set?
         
@@ -64,14 +61,29 @@ class DashboardViewController: UIViewController {
 
         // Use the formatter and the dateFormat from above to make a new formatted String
         let dateString = formatter.string(from: currentDateAndTime)
-        print(dateString)
         date.text = dateString
         
-        //print out time 62 64 66 for time
         formatter.dateFormat = "hh: mm : ss a"
         let timeString = formatter.string(from: currentDateAndTime)
-        print(timeString)
         time.text = timeString
+        
+        if dayType == .O {
+            dayLabel.text = "O Day"
+        }
+        else if dayType == .A {
+            dayLabel.text = "A Day"
+        }
+        else {
+            dayLabel.text = "No School"
+        }
+        
+        if let currentClass = getCurrentClass() {
+            teacherName.text = currentClass.teacherName
+        }
+        else {
+            teacherName.text = ""
+        }
+        
     }
     
     override func viewDidLoad() {
@@ -80,7 +92,7 @@ class DashboardViewController: UIViewController {
         getDayTypeForToday()
         getClassBlocksForToday(roomNumber: roomNumber)
         
-        updateUI()
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateUI), userInfo: nil, repeats: true)
     }
 
     /* Uses a network call to the server to retrieve the day type of the current day */
@@ -162,9 +174,6 @@ class DashboardViewController: UIViewController {
         // Search through all the classes
         for classBlock in classBlocks {
             // Return the one that is now
-            print("Start time: \(classBlock.startTime)")
-            print("Now: \(Date())")
-            print("End time: \(classBlock.endTime)")
             if Date() >= classBlock.startTime && Date() <= classBlock.endTime {
                 return classBlock
             }
@@ -178,5 +187,36 @@ class DashboardViewController: UIViewController {
         // Hint, you have a function that can give you the current class...
         return TimeInterval()
     }
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+       guard let buttonPress = presses.first?.type else { return }
+            
+       switch(buttonPress) {
+       case .menu:
+          print("Menu")
+       case .playPause:
+          print("Play/Pause")
+          // Segue to the settings screen
+        performSegue(withIdentifier: "showSettings", sender: nil)
+        
+       case .select:
+          print("select")
+       case .upArrow:
+          print("Up arrow")
+       case .downArrow:
+          print("Down arrow")
+       case .leftArrow:
+          print("Left arrow")
+       case .rightArrow:
+          print("right arrow")
+       case .pageUp:
+        print("page up")
+       case .pageDown:
+        print("page down")
+       @unknown default:
+        print("unknown")
+       }
+    }
+    
 }
 
