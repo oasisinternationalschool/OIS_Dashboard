@@ -54,14 +54,6 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lxb-iB-U7Z">
-                                <rect key="frame" x="786" y="729" width="349" height="111"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.27715883270000002" green="0.091985335799999998" blue="0.42435162479999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" name="NotoSansOriya-Bold" family="Noto Sans Oriya" pointSize="50"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Class Start"/>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="318" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cig-9c-G58">
                                 <rect key="frame" x="1675" y="962" width="177" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -95,7 +87,6 @@
                         <color key="backgroundColor" red="0.064598160560000006" green="0.064598160560000006" blue="0.064598160560000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
-                        <outlet property="classStartButton" destination="lxb-iB-U7Z" id="ENc-Hh-EhM"/>
                         <outlet property="classroonNumber" destination="Cig-9c-G58" id="LBu-MQ-fIO"/>
                         <outlet property="date" destination="FIO-AX-2BZ" id="Zni-3F-RqQ"/>
                         <outlet property="dayLabel" destination="4Ug-LX-L9d" id="cei-ef-bhj"/>

@@ -19,10 +19,10 @@ class DashboardViewController: UIViewController {
     @IBOutlet weak var teacherName: UILabel!
     @IBOutlet weak var classroonNumber: UILabel!
     
-    var roomNumber = "325" // TODO: Change to a real value from the settings
+    var roomNumber: String = "310"
     {
         didSet{
-            // What else do we have to update? Or reset?
+            // TODO: What else do we have to update? Or reset?
         }
     }
     
@@ -47,9 +47,6 @@ class DashboardViewController: UIViewController {
     }
     
     @objc func updateUI() {
-        // How often should we call this function?
-        // What labels should we set?
-        
         // SET DATE AND TIME DISPLAY
         // Calling Date() returns the current time
         let currentDateAndTime = Date()
@@ -84,15 +81,30 @@ class DashboardViewController: UIViewController {
             teacherName.text = ""
         }
         
+        // TODO: SET THE ROOM LABEL
     }
     
     override func viewDidLoad() {
+        // Apple's viewDidLoad
         super.viewDidLoad()
-
+        // Our viewDidLoad
+        // TODO: When do we need to check our saved preferences
+        // Get any saved room number
+        let defaults = UserDefaults.standard
+        if let savedRoomNumber = defaults.object(forKey: "RoomNumber") as? String {
+            roomNumber = savedRoomNumber
+        }
         getDayTypeForToday()
         getClassBlocksForToday(roomNumber: roomNumber)
         
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateUI), userInfo: nil, repeats: true)
+        
+        let tap = UISwipeGestureRecognizer(target: self, action: #selector(tappedButton))
+        tap.allowedPressTypes = [NSNumber(value: UIPress.PressType.select.rawValue)]
+                view.addGestureRecognizer(tap)
+//        let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(tappedButton))
+//        swipeRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.select.rawValue)]
+//           view.addGestureRecognizer(swipeRecognizer)
     }
 
     /* Uses a network call to the server to retrieve the day type of the current day */
@@ -133,7 +145,7 @@ class DashboardViewController: UIViewController {
 
     /* Uses a network call to the server to retrieve all classes that are taught in this room on the current day */
     func getClassBlocksForToday(roomNumber: String) {
-        let urlPath = "/getBellScheduleForRoom"
+        let urlPath = "/getBellScheduleForRoom?roomnumber=\(roomNumber)"
         let url = URL(string: "\(SERVER_URL)\(urlPath)")!
         let request = URLRequest(url: url)
         let session = URLSession.shared
@@ -188,34 +200,37 @@ class DashboardViewController: UIViewController {
         return TimeInterval()
     }
     
-    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-       guard let buttonPress = presses.first?.type else { return }
-            
-       switch(buttonPress) {
-       case .menu:
-          print("Menu")
-       case .playPause:
-          print("Play/Pause")
-          // Segue to the settings screen
-        performSegue(withIdentifier: "showSettings", sender: nil)
-        
-       case .select:
-          print("select")
-       case .upArrow:
-          print("Up arrow")
-       case .downArrow:
-          print("Down arrow")
-       case .leftArrow:
-          print("Left arrow")
-       case .rightArrow:
-          print("right arrow")
-       case .pageUp:
-        print("page up")
-       case .pageDown:
-        print("page down")
-       @unknown default:
-        print("unknown")
-       }
+//    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+//       guard let buttonPress = presses.first?.type else { return }
+//       
+//       switch(buttonPress) {
+//       case .menu:
+//          print("Menu")
+//       case .playPause:
+//          print("Play/Pause")
+//          // Segue to the settings screen
+//        performSegue(withIdentifier: "showSettings", sender: nil)
+//       case .select:
+//          print("select")
+//       case .upArrow:
+//          print("Up arrow")
+//       case .downArrow:
+//          print("Down arrow")
+//       case .leftArrow:
+//          print("Left arrow")
+//       case .rightArrow:
+//          print("right arrow")
+//       case .pageUp:
+//        print("page up")
+//       case .pageDown:
+//        print("page down")
+//       @unknown default:
+//        print("unknown")
+//       }
+//    }
+    
+    @objc func tappedButton() {
+        print("tapped")
     }
     
 }
