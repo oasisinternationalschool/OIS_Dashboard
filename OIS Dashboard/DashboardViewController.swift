@@ -22,7 +22,10 @@ class DashboardViewController: UIViewController {
     var roomNumber: String = "310"
     {
         didSet{
-            // TODO: What else do we have to update? Or reset?
+            // Clear out the old the new
+            classBlocks = []
+            getClassBlocksForToday(roomNumber: roomNumber)
+            
         }
     }
     
@@ -81,19 +84,24 @@ class DashboardViewController: UIViewController {
             teacherName.text = ""
         }
         
-        // TODO: SET THE ROOM LABEL
+        classroonNumber.text = roomNumber
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Get any saved room number
+        let defaults = UserDefaults.standard
+        if let savedRoomNumber = defaults.object(forKey: "RoomNumber") as? String {
+            roomNumber = savedRoomNumber
+        }
+        // TODO: ELSE alert the user the put in the room number
     }
     
     override func viewDidLoad() {
         // Apple's viewDidLoad
         super.viewDidLoad()
         // Our viewDidLoad
-        // TODO: When do we need to check our saved preferences
-        // Get any saved room number
-        let defaults = UserDefaults.standard
-        if let savedRoomNumber = defaults.object(forKey: "RoomNumber") as? String {
-            roomNumber = savedRoomNumber
-        }
+
         getDayTypeForToday()
         getClassBlocksForToday(roomNumber: roomNumber)
         
@@ -200,34 +208,34 @@ class DashboardViewController: UIViewController {
         return TimeInterval()
     }
     
-//    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-//       guard let buttonPress = presses.first?.type else { return }
-//       
-//       switch(buttonPress) {
-//       case .menu:
-//          print("Menu")
-//       case .playPause:
-//          print("Play/Pause")
-//          // Segue to the settings screen
-//        performSegue(withIdentifier: "showSettings", sender: nil)
-//       case .select:
-//          print("select")
-//       case .upArrow:
-//          print("Up arrow")
-//       case .downArrow:
-//          print("Down arrow")
-//       case .leftArrow:
-//          print("Left arrow")
-//       case .rightArrow:
-//          print("right arrow")
-//       case .pageUp:
-//        print("page up")
-//       case .pageDown:
-//        print("page down")
-//       @unknown default:
-//        print("unknown")
-//       }
-//    }
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+       guard let buttonPress = presses.first?.type else { return }
+       
+       switch(buttonPress) {
+       case .menu:
+          print("Menu")
+       case .playPause:
+          print("Play/Pause")
+          // Segue to the settings screen
+        performSegue(withIdentifier: "showSettings", sender: nil)
+       case .select:
+          print("select")
+       case .upArrow:
+          print("Up arrow")
+       case .downArrow:
+          print("Down arrow")
+       case .leftArrow:
+          print("Left arrow")
+       case .rightArrow:
+          print("right arrow")
+       case .pageUp:
+        print("page up")
+       case .pageDown:
+        print("page down")
+       @unknown default:
+        print("unknown")
+       }
+    }
     
     @objc func tappedButton() {
         print("tapped")

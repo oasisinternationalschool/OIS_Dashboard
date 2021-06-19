@@ -9,12 +9,23 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
+    @IBOutlet weak var roomNumberTextField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let defaults = UserDefaults.standard
+        if let savedRoomNumber = defaults.object(forKey: "RoomNumber") as? String {
+            roomNumberTextField.text = savedRoomNumber
+            
+        }
+    }
 
     /*
     // MARK: - Navigation
@@ -26,4 +37,8 @@ class SettingsViewController: UIViewController {
     }
     */
 
+    @IBAction func savedRoomNumber(_ sender: UIButton) {
+        let defaults = UserDefaults.standard
+        defaults.set(roomNumberTextField.text, forKey: "RoomNumber")
+    }
 }
